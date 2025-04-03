@@ -1,4 +1,6 @@
 const mongoose=require('mongoose')
+const { hashpassword } = require('../utils/hashpassword')
+
 
 const userschema=new mongoose.Schema({
     name:{
@@ -6,7 +8,7 @@ const userschema=new mongoose.Schema({
         required:true
     },
     userid:{
-        type:Number,
+        type:String,
         required:true,
         unique:true
     },
@@ -27,24 +29,39 @@ const userschema=new mongoose.Schema({
     accomodation:{
         type:String,
         required:true,
+        enum:["Hostel","Day Scholar"]
+    },
+    hostelDetails:{
+        type:String,
+        required:function (){
+            return this.accomodationType==="Hostel"
+        }
     },
     course:{
         type:String,
         required:true
     },
     year:{
-        type:Number,
+        type:String,
         required:true
     },
     password:{
         type:String,
         required:true
     },
-    createdat:{
-        type:Date,
-        default:Date.now
-    }
-})
+},
+    {timestamps:true}
+)
 
+userschema.pre("save", async function(next){
+    if(!this.isModified("password")) return next();
+    try{
+        this.password=await hashpassword(this.password)
+        next()
+    }
+    catch(error){
+        next(error)
+    }
+});
 
 module.exports =mongoose.model("User",userschema)
