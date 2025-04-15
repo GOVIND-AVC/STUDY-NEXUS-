@@ -40,7 +40,7 @@ const login=async(req,res)=>{
             return res.status(401).json({message:"Incorrect Password"})
         }
         const token = generateToken(existinguser._id)
-        res.status(200).json({message:"Login successfull",token,user:{
+        res.status(200).json({success:true,message:"Login successfull",token,user:{
             name:existinguser.name,
             userid:existinguser.userid,
             email:existinguser.email
