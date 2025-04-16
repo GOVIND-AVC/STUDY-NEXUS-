@@ -5,6 +5,7 @@ import Signup from './pages/Signup'
 import { Toaster } from 'react-hot-toast'
 import { Home } from 'lucide-react'
 import HOME from './pages/HOME.JSX'
+import CreateGroup from './pages/CreateGroup'
 
 
 const App = () => {
@@ -16,6 +17,8 @@ const App = () => {
         <Route path='/signup' element={<Signup/>}/>
         <Route path='/login' element={<Login/>}/>
         <Route path='/home' element={<HOME/>}/>
+        <Route path='/creategroup'element={<CreateGroup/>}/>
+        
       </Routes>
     </Router>
     </>

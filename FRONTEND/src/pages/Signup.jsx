@@ -1,193 +1,511 @@
-/* eslint-disable no-unused-vars */
+// /* eslint-disable no-unused-vars */
 
-import React from 'react'
-import { useState,useEffect } from 'react';
-import { FaUser, FaEnvelope, FaPhone, FaLock, FaBuilding, FaCalendarAlt } from 'react-icons/fa';
+import React, { useState } from 'react';
+import {
+  BookOpen,
+  User,
+  Calendar,
+  Phone,
+  Mail,
+  Building2,
+  School,
+} from 'lucide-react';
+import { Link } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
-
-
+// Import custom components
+// import InputField from './components/InputField';
+// import PasswordInput from './components/PasswordInput';
 
 const Signup = () => {
-
-  const [formData,setFormdata]=useState({
-    name:'',
-    userid: '',
+  const [formData, setFormData] = useState({
+    name: '',
+    userId: '',
     dob: '',
-    number: '',
+    phone: '',
     email: '',
-    accomodation: '',
-    hostelDetails: '',
+    isHosteler: false,
+    hostel: '',
     course: '',
     year: '',
-    password:''
-  })
+    password: '',
+    confirmPassword: '',
+    agreeToTerms: false,
+  });
 
-  const [showPassword,setShowPassword]=useState(false)
-  const[errors,seterrors]=useState(false)
+  const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange=(e)=>{
-  const {name,value}=e.target
-  setFormdata((prev)=>({
-    ...prev,[name]:value
-  }))
-  }
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
+  };
 
-
-
-
-
-
-
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (formData.password !== formData.confirmPassword) {
+      toast.error("Passwords don't match!");
+      return;
+    }
+    console.log(formData);
+    toast.success('Account created successfully!');
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f0f4ff] px-4">
-    <div className="bg-white p-10 rounded-2xl shadow-lg w-full max-w-3xl">
-      {/* Title */}
-      <h1 className="text-3xl font-extrabold text-gray-900 mb-8 text-center">
-        <span className="inline-block align-middle text-purple-700 mr-2">📘</span>
-        StudyNexus
-      </h1>
-      <h2 className="text-2xl font-bold mb-6 text-center">Create your account</h2>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4">
+      <div className="max-w-4xl mx-auto">
+        <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+          <div className="p-8">
+            <div className="flex items-center gap-2 mb-8">
+              <BookOpen className="h-8 w-8 text-indigo-600" />
+              <h1 className="text-2xl font-bold text-gray-800">StudyNexus</h1>
+            </div>
 
-      <form className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Full Name */}
-        <div className="relative">
-          <label className="text-sm font-medium text-gray-700">Full Name</label>
-          <div className="flex items-center border rounded-lg px-3">
-            <FaUser className="text-gray-400 mr-2" />
-            <input type="text" name="name" value={formData.name} onChange={handleChange} placeholder="Enter your name" className="w-full py-2 outline-none" />
+            <h2 className="text-3xl font-bold text-gray-800 mb-8">Create your account</h2>
+
+            <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {/* Name */}
+              <InputField
+                id="name"
+                label="Full Name"
+                icon={<User />}
+                value={formData.name}
+                onChange={handleChange}
+              />
+
+              {/* User ID */}
+              <InputField
+                id="userId"
+                label="User ID"
+                value={formData.userId}
+                onChange={handleChange}
+              />
+
+              {/* DOB */}
+              <InputField
+                id="dob"
+                label="Date of Birth"
+                type="date"
+                icon={<Calendar />}
+                value={formData.dob}
+                onChange={handleChange}
+              />
+
+              {/* Phone */}
+              <InputField
+                id="phone"
+                label="Phone Number"
+                type="tel"
+                icon={<Phone />}
+                value={formData.phone}
+                onChange={handleChange}
+              />
+
+              {/* Email */}
+              <InputField
+                id="email"
+                label="Email"
+                type="email"
+                icon={<Mail />}
+                value={formData.email}
+                onChange={handleChange}
+              />
+
+              {/* Accommodation */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700">Accommodation</label>
+                <div className="flex items-center gap-4">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="isHosteler"
+                      checked={!formData.isHosteler}
+                      onChange={() => setFormData((prev) => ({ ...prev, isHosteler: false, hostel: '' }))}
+                    />
+                    <span>Day Scholar</span>
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="radio"
+                      name="isHosteler"
+                      checked={formData.isHosteler}
+                      onChange={() => setFormData((prev) => ({ ...prev, isHosteler: true }))}
+                    />
+                    <span>Hosteler</span>
+                  </label>
+                </div>
+              </div>
+
+              {/* Hostel Name */}
+              {formData.isHosteler && (
+                <InputField
+                  id="hostel"
+                  label="Hostel Name"
+                  icon={<Building2 />}
+                  value={formData.hostel}
+                  onChange={handleChange}
+                />
+              )}
+
+              {/* Course */}
+              <InputField
+                id="course"
+                label="Course"
+                icon={<School />}
+                value={formData.course}
+                onChange={handleChange}
+              />
+
+              {/* Year Dropdown */}
+              <div className="space-y-2">
+                <label className="text-sm font-medium text-gray-700" htmlFor="year">
+                  Year
+                </label>
+                <select
+                  id="year"
+                  name="year"
+                  value={formData.year}
+                  onChange={handleChange}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                >
+                  <option value="">Select Year</option>
+                  <option value="1">1st Year</option>
+                  <option value="2">2nd Year</option>
+                  <option value="3">3rd Year</option>
+                  <option value="4">4th Year</option>
+                </select>
+              </div>
+
+              {/* Password */}
+              <PasswordInput
+                id="password"
+                label="Password"
+                showPassword={showPassword}
+                togglePassword={() => setShowPassword((prev) => !prev)}
+                value={formData.password}
+                onChange={handleChange}
+              />
+
+              {/* Confirm Password */}
+              <PasswordInput
+                id="confirmPassword"
+                label="Confirm Password"
+                showPassword={showPassword}
+                togglePassword={() => setShowPassword((prev) => !prev)}
+                value={formData.confirmPassword}
+                onChange={handleChange}
+              />
+
+              {/* Terms & Privacy */}
+              <div className="col-span-full">
+                <label className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    name="agreeToTerms"
+                    checked={formData.agreeToTerms}
+                    onChange={handleChange}
+                    className="w-4 h-4 text-indigo-600 border-gray-300 rounded"
+                    required
+                  />
+                  <span className="text-sm text-gray-600">
+                    I agree to the{' '}
+                    <a href="#" className="text-indigo-600 hover:text-indigo-500">Terms of Service</a>{' '}
+                    and{' '}
+                    <a href="#" className="text-indigo-600 hover:text-indigo-500">Privacy Policy</a>
+                  </span>
+                </label>
+              </div>
+
+              {/* Submit */}
+              <div className="col-span-full">
+                <button
+                  type="submit"
+                  className="w-full bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 transition"
+                >
+                  Create Account
+                </button>
+              </div>
+
+              {/* Sign-in Redirect */}
+              <div className="col-span-full text-center">
+                <p className="text-sm text-gray-600">
+                  Already have an account?{' '}
+                  <Link to="/" className="text-indigo-600 hover:text-indigo-500 font-medium">
+                    Sign in
+                  </Link>
+                </p>
+              </div>
+            </form>
           </div>
         </div>
-
-        {/* User ID */}
-        <div>
-          <label className="text-sm font-medium text-gray-700">User ID</label>
-          <input type="text" name="userid" value={formData.userid} onChange={handleChange} className="w-full border rounded-lg px-3 py-2" />
-        </div>
-
-        {/* DOB */}
-        <div className="relative">
-          <label className="text-sm font-medium text-gray-700">Date of Birth</label>
-          <div className="flex items-center border rounded-lg px-3">
-            <FaCalendarAlt className="text-gray-400 mr-2" />
-            <input type="date" name="dob" value={formData.dob} onChange={handleChange} className="w-full py-2 outline-none" />
-          </div>
-        </div>
-
-        {/* Phone */}
-        <div className="relative">
-          <label className="text-sm font-medium text-gray-700">Phone Number</label>
-          <div className="flex items-center border rounded-lg px-3">
-            <FaPhone className="text-gray-400 mr-2" />
-            <input type="tel" name="number" value={formData.number} onChange={handleChange} className="w-full py-2 outline-none" />
-          </div>
-        </div>
-
-        {/* Email */}
-        <div className="relative">
-          <label className="text-sm font-medium text-gray-700">Email</label>
-          <div className="flex items-center border rounded-lg px-3">
-            <FaEnvelope className="text-gray-400 mr-2" />
-            <input type="email" name="email" value={formData.email} onChange={handleChange} className="w-full py-2 outline-none" />
-          </div>
-        </div>
-
-        {/* Accommodation */}
-        <div>
-          <label className="text-sm font-medium text-gray-700 block mb-1">Accommodation</label>
-          <div className="flex items-center space-x-4 mt-1">
-            <label className="inline-flex items-center">
-              <input type="radio" name="accomodation" value="Day Scholar" checked={formData.accomodation === 'Day Scholar'} onChange={handleChange} />
-              <span className="ml-2">Day Scholar</span>
-            </label>
-            <label className="inline-flex items-center">
-              <input type="radio" name="accomodation" value="Hosteler" checked={formData.accomodation === 'Hosteler'} onChange={handleChange} />
-              <span className="ml-2">Hosteler</span>
-            </label>
-          </div>
-        </div>
-
-        {/* Hostel (conditional) */}
-        {formData.accomodation === 'Hosteler' && (
-          <div className="md:col-span-2">
-            <label className="text-sm font-medium text-gray-700">Hostel Name</label>
-            <input type="text" name="hostelDetails" value={formData.hostelDetails} onChange={handleChange} className="w-full border rounded-lg px-3 py-2" />
-          </div>
-        )}
-
-        {/* Course */}
-        <div className="relative">
-          <label className="text-sm font-medium text-gray-700">Course</label>
-          <div className="flex items-center border rounded-lg px-3">
-            <FaBuilding className="text-gray-400 mr-2" />
-            <input type="text" name="course" value={formData.course} onChange={handleChange} className="w-full py-2 outline-none" />
-          </div>
-        </div>
-
-        {/* Year */}
-        <div>
-          <label className="text-sm font-medium text-gray-700">Year</label>
-          <select name="year" value={formData.year} onChange={handleChange} className="w-full border rounded-lg px-3 py-2">
-            <option value="">Select Year</option>
-            <option value="1st">1st</option>
-            <option value="2nd">2nd</option>
-            <option value="3rd">3rd</option>
-            <option value="4th">4th</option>
-          </select>
-        </div>
-
-        {/* Password */}
-        <div className="relative">
-          <label className="text-sm font-medium text-gray-700">Password</label>
-          <div className="flex items-center border rounded-lg px-3">
-            <FaLock className="text-gray-400 mr-2" />
-            <input
-              type={showPassword ? 'text' : 'password'}
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              className="w-full py-2 outline-none"
-            />
-            <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-gray-500 ml-2">
-              {showPassword ? '🙈' : '👁️'}
-            </button>
-          </div>
-        </div>
-
-        {/* Confirm Password */}
-        <div className="relative">
-          <label className="text-sm font-medium text-gray-700">Confirm Password</label>
-          <div className="flex items-center border rounded-lg px-3">
-            <FaLock className="text-gray-400 mr-2" />
-            <input
-              type="password"
-              name="confirmPassword"
-              value={formData.confirmPassword}
-              onChange={handleChange}
-              className="w-full py-2 outline-none"
-            />
-          </div>
-        </div>
-
-        {/* Terms & Conditions */}
-        <div className="md:col-span-2 flex items-center space-x-2">
-          <input type="checkbox" name="termsAgreed" checked={formData.termsAgreed} onChange={handleChange} />
-          <span className="text-sm">
-            I agree to the <span className="text-blue-600 underline">Terms of Service</span> and <span className="text-blue-600 underline">Privacy Policy</span>
-          </span>
-        </div>
-
-        {/* Submit Button */}
-        <div className="md:col-span-2">
-          <button type="submit" className="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition">
-            Create Account
-          </button>
-        </div>
-      </form>
+      </div>
     </div>
-  </div>
-  )
-}
+  );
+};
 
-export default Signup
+export default Signup;
+// import React from 'react'
+// import { useState,useEffect } from 'react';
+// import {
+//   BookOpen,
+//   User,
+//   Calendar,
+//   Phone,
+//   Mail,
+//   Building2,
+//   School,
+//   Lock,
+//   Eye,
+//   EyeOff,
+// } from 'lucide-react';
+// import { FaUser, FaEnvelope, FaPhone, FaLock, FaBuilding, FaCalendarAlt } from 'react-icons/fa';
+// import toast from 'react-hot-toast';
+
+
+
+
+// const Signup = () => {
+
+//   const [formData,setFormdata]=useState({
+//     name:'',
+//     userid: '',
+//     dob: '',
+//     number: '',
+//     email: '',
+//     accomodation: '',
+//     hostelDetails: '',
+//     course: '',
+//     year: '',
+//     password:''
+//   })
+
+//   const [showPassword,setShowPassword]=useState(false)
+//   const[errors,seterrors]=useState(false)
+
+//   const handleChange=(e)=>{
+//   const {name,value}=e.target
+//   setFormdata((prev)=>({
+//     ...prev,[name]:value
+//   }))
+//   }
+
+//   const handleSubmit = (e) => {
+//     e.preventDefault();
+//     // Handle form submission
+//     console.log(formData);
+//   };
+
+
+
+
+
+
+
+
+//   return (
+//     <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4">
+//       <div className="max-w-4xl mx-auto">
+//         <div className="bg-white rounded-2xl shadow-xl overflow-hidden">
+//           <div className="p-8">
+//             <div className="flex items-center gap-2 mb-8">
+//               <BookOpen className="h-8 w-8 text-indigo-600" />
+//               <h1 className="text-2xl font-bold text-gray-800">StudyNexus</h1>
+//             </div>
+
+//             <h2 className="text-3xl font-bold text-gray-800 mb-8">Create your account</h2>
+
+//             <form onSubmit={handleSubmit} className="grid grid-cols-1 md:grid-cols-2 gap-6">
+//               {/* Full Name */}
+//               <InputField
+//                 id="name"
+//                 label="Full Name"
+//                 icon={<User />}
+//                 value={formData.name}
+//                 onChange={handleChange}
+//               />
+
+//               {/* User ID */}
+//               <InputField
+//                 id="userId"
+//                 label="User ID"
+//                 value={formData.userId}
+//                 onChange={handleChange}
+//               />
+
+//               {/* Date of Birth */}
+//               <InputField
+//                 id="dob"
+//                 label="Date of Birth"
+//                 type="date"
+//                 icon={<Calendar />}
+//                 value={formData.dob}
+//                 onChange={handleChange}
+//               />
+
+//               {/* Phone Number */}
+//               <InputField
+//                 id="phone"
+//                 label="Phone Number"
+//                 type="tel"
+//                 icon={<Phone />}
+//                 value={formData.phone}
+//                 onChange={handleChange}
+//               />
+
+//               {/* Email */}
+//               <InputField
+//                 id="email"
+//                 label="Email"
+//                 type="email"
+//                 icon={<Mail />}
+//                 value={formData.email}
+//                 onChange={handleChange}
+//               />
+
+//               {/* Accommodation */}
+//               <div className="space-y-2">
+//                 <label className="text-sm font-medium text-gray-700">Accommodation</label>
+//                 <div className="flex items-center gap-4">
+//                   <label className="flex items-center gap-2">
+//                     <input
+//                       type="radio"
+//                       name="isHosteler"
+//                       checked={!formData.isHosteler}
+//                       onChange={() =>
+//                         setFormData((prev) => ({ ...prev, isHosteler: false, hostel: '' }))
+//                       }
+//                       className="text-indigo-600 focus:ring-indigo-500"
+//                     />
+//                     <span>Day Scholar</span>
+//                   </label>
+//                   <label className="flex items-center gap-2">
+//                     <input
+//                       type="radio"
+//                       name="isHosteler"
+//                       checked={formData.isHosteler}
+//                       onChange={() =>
+//                         setFormData((prev) => ({ ...prev, isHosteler: true }))
+//                       }
+//                       className="text-indigo-600 focus:ring-indigo-500"
+//                     />
+//                     <span>Hosteler</span>
+//                   </label>
+//                 </div>
+//               </div>
+
+//               {/* Hostel Input */}
+//               {formData.isHosteler && (
+//                 <InputField
+//                   id="hostel"
+//                   label="Hostel Name"
+//                   icon={<Building2 />}
+//                   value={formData.hostel}
+//                   onChange={handleChange}
+//                   required
+//                 />
+//               )}
+
+//               {/* Course */}
+//               <InputField
+//                 id="course"
+//                 label="Course"
+//                 icon={<School />}
+//                 value={formData.course}
+//                 onChange={handleChange}
+//               />
+
+//               {/* Year Dropdown */}
+//               <div className="space-y-2">
+//                 <label className="text-sm font-medium text-gray-700" htmlFor="year">
+//                   Year
+//                 </label>
+//                 <select
+//                   id="year"
+//                   name="year"
+//                   value={formData.year}
+//                   onChange={handleChange}
+//                   className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+//                   required
+//                 >
+//                   <option value="">Select Year</option>
+//                   <option value="1">1st Year</option>
+//                   <option value="2">2nd Year</option>
+//                   <option value="3">3rd Year</option>
+//                   <option value="4">4th Year</option>
+//                 </select>
+//               </div>
+
+//               {/* Password */}
+//               <PasswordInput
+//                 id="password"
+//                 label="Password"
+//                 showPassword={showPassword}
+//                 togglePassword={() => setShowPassword((prev) => !prev)}
+//                 value={formData.password}
+//                 onChange={handleChange}
+//               />
+
+//               {/* Confirm Password */}
+//               <PasswordInput
+//                 id="confirmPassword"
+//                 label="Confirm Password"
+//                 showPassword={showPassword}
+//                 togglePassword={() => setShowPassword((prev) => !prev)}
+//                 value={formData.confirmPassword}
+//                 onChange={handleChange}
+//               />
+
+//               {/* Terms & Conditions */}
+//               <div className="col-span-full">
+//                 <label className="flex items-center gap-2">
+//                   <input
+//                     type="checkbox"
+//                     name="agreeToTerms"
+//                     checked={formData.agreeToTerms}
+//                     onChange={handleChange}
+//                     className="w-4 h-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+//                     required
+//                   />
+//                   <span className="text-sm text-gray-600">
+//                     I agree to the{' '}
+//                     <a href="#" className="text-indigo-600 hover:text-indigo-500">
+//                       Terms of Service
+//                     </a>{' '}
+//                     and{' '}
+//                     <a href="#" className="text-indigo-600 hover:text-indigo-500">
+//                       Privacy Policy
+//                     </a>
+//                   </span>
+//                 </label>
+//               </div>
+
+//               {/* Submit Button */}
+//               <div className="col-span-full">
+//                 <button
+//                   type="submit"
+//                   className="w-full flex items-center justify-center gap-2 bg-indigo-600 text-white py-2 px-4 rounded-lg hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors"
+//                 >
+//                   Create Account
+//                 </button>
+//               </div>
+
+//               {/* Sign-in Redirect */}
+//               <div className="col-span-full text-center">
+//                 <p className="text-sm text-gray-600">
+//                   Already have an account?{' '}
+//                   <Link to="/" className="text-indigo-600 hover:text-indigo-500 font-medium">
+//                     Sign in
+//                   </Link>
+//                 </p>
+//               </div>
+//             </form>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   )
+// }
+
+// export default Signup
