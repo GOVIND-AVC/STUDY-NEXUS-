@@ -8,6 +8,13 @@ const HOME = () => {
       <Link to ="/creategroup">
       <h3>CREATE STUDY GROUP</h3>
       </Link>
+      <br />
+
+    <Link to="/browsegroup">
+    <h3>BrowseGroup</h3>
+    </Link>
+
+
     </div>
 
   )
