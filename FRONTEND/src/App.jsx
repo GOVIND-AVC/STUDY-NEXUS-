@@ -6,6 +6,7 @@ import { Toaster } from 'react-hot-toast'
 import { Home } from 'lucide-react'
 import HOME from './pages/HOME.JSX'
 import CreateGroup from './pages/CreateGroup'
+import BrowseRequests from './pages/BrowseRequest'
 
 
 const App = () => {
@@ -18,6 +19,7 @@ const App = () => {
         <Route path='/login' element={<Login/>}/>
         <Route path='/home' element={<HOME/>}/>
         <Route path='/creategroup'element={<CreateGroup/>}/>
+        <Route path='/browsegroup'element={<BrowseRequests/>}/>
         
       </Routes>
     </Router>
