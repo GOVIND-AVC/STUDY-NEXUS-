@@ -1,4 +1,5 @@
 /* eslint-disable no-unused-vars */
+
 import React, { useEffect, useState } from "react";
 
 import axios from 'axios'
@@ -61,6 +62,27 @@ const BrowseRequests =()=>{
         fetchRequests();
     };
     
+    const [aiAnswers,setAiAnswers]=useState({})
+
+    const handleAiInputChange=(id,value)=>{
+        setAiAnswers(prev=>({
+            ...prev,
+            [id]:value
+        }))
+    }
+
+    
+    const handleJoingroup=(id)=>{
+        const userAnswer=aiAnswers[id];
+        console.log("Joining group ID:",id);
+        console.log("The answer Entered is ",userAnswer)
+    }
+
+
+
+
+
+
 return(
     <div className="p-4">
         <h2>Browse Study Requests</h2>
@@ -94,6 +116,14 @@ return(
                 <p>Location: {req.location}</p>
                 <p>Language: {req.language}</p>
                 <p>Members: {req.members.length} / {req.maxSize}</p>
+
+                <p><strong>Additional Info : </strong>{req.additionalInfo}</p>
+                <p><strong>AI QUESTION : {req.aiquestion}</strong></p>
+
+                <textarea placeholder="Please enter your answer to the Question above" value={aiAnswers[req._id]||""}
+                onChange={(e)=>handleAiInputChange(req._id,e.target.value)}
+                />
+                <button onClick={()=>handleJoingroup(req._id)}>JOIN GROUP</button>
             
             </div>
             
