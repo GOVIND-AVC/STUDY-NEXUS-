@@ -10,12 +10,11 @@ import {
   Building2,
   School,
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import InputField from '../components/InputField';
+import PasswordInput from '../components/PasswordInput';
 
-// Import custom components
-// import InputField from './components/InputField';
-// import PasswordInput from './components/PasswordInput';
 
 const Signup = () => {
   const [formData, setFormData] = useState({
@@ -32,6 +31,8 @@ const Signup = () => {
     confirmPassword: '',
     agreeToTerms: false,
   });
+  
+  const navigate=useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -43,14 +44,46 @@ const Signup = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit =async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords don't match!");
       return;
     }
-    console.log(formData);
+    try {
+      const response = await fetch('http://localhost:4500/api/auth/signup', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: formData.name,
+        userid: formData.userId,
+        dob: formData.dob,
+        number: formData.phone,
+        email: formData.email,
+        accomodation: formData.isHosteler ? 'Hostel' : 'Day Scholar',
+        hostelDetails: formData.isHosteler ? formData.hostel : '',
+        course: formData.course,
+        year: formData.year,
+        password: formData.password,
+      }),
+    });
+
+    const result = await response.json();
+
+    if (!response.ok) {
+      throw new Error(result.message || 'Signup failed');
+    }
+
     toast.success('Account created successfully!');
+    navigate('/login');
+  } catch (error) {
+    toast.error(error.message || 'Error creating account');
+  }
+    // console.log(formData);
+    // toast.success('Account created successfully!');
+    // navigate('/login')
   };
 
   return (
