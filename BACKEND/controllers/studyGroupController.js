@@ -88,11 +88,19 @@ const joinStudyGroupWithAI=async(req,res)=>{
             return res.status(400).json({ error: "You are already a member of this group." });
         }
 
+        if (group.members.length >= group.maxSize) {
+            return res.status(400).json({ error: "This group has reached its maximum size." });
+        }
+
         const score=await evaluateAiAnswer(group.aiquestion,aiAnswer)
+        
+        if (score === null) {
+            return res.status(500).json({ error: "Failed to evaluate answer due to API error." });
+        }
 
         if(score>=4){
-            members.push(userId)
-            group.members=members
+            group.members.push(userId)
+            // group.members=members
             await group.save()
 
             return res.status(200).json({
