@@ -1,4 +1,5 @@
 const StudyGroup = require("../models/StudyGroup");
+const evaluateAiAnswer=require('../utils/evaluateAnswer')
 
 const createGroup=async(req,res)=>{
     try{
@@ -18,7 +19,7 @@ const createGroup=async(req,res)=>{
             createdby:req.user._id,
             language,
             status:'active',
-            members:JSON.stringify([req.user._id])
+            members: [req.user._id]
         })
 
         const savedGroup= await newGroup.save()
@@ -47,7 +48,8 @@ const getBrowseRequests =async(req,res)=>{
         const groups=await StudyGroup.find(query).lean();
 
         const filteredGroups = groups.filter(group=>{
-            const members=JSON.parse(group.members || '[]');
+            const members = group.members || [];
+            // const members=JSON.parse(group.members || '[]');
             return members.length < group.maxSize
         })
 
@@ -77,9 +79,13 @@ const joinStudyGroupWithAI=async(req,res)=>{
             return  res.status(400).json({error:"This group is no longer active"})
         }
 
-        let members=Array.isArray(group.members)?group.members:[];
-        if(members.includes(userId)){
-            return res.status(400).json({error:"You are already a member of this group."})
+        // let members=Array.isArray(group.members)?group.members:[];
+        // if(members.includes(userId)){
+        //     return res.status(400).json({error:"You are already a member of this group."})
+        // }
+        group.members = Array.isArray(group.members) ? group.members : [];
+        if (group.members.some(member => member.equals(userId))) {
+            return res.status(400).json({ error: "You are already a member of this group." });
         }
 
         const score=await evaluateAiAnswer(group.aiquestion,aiAnswer)

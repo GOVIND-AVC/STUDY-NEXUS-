@@ -64,9 +64,10 @@ const studyGroupSchema=new mongoose.Schema({
     status:{
         type:String
     },
-    members:{
-        type:String
-    }
+    members: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'user'
+  }]
 
 })
 const StudyGroup=mongoose.model("StudyGroup",studyGroupSchema)
