@@ -40,7 +40,7 @@ const getBrowseRequests =async(req,res)=>{
         let query ={
             status:'active'
         }
-
+            
         if(course)query.course= course;
         if(topic)query.topic=topic
 
@@ -57,4 +57,76 @@ const getBrowseRequests =async(req,res)=>{
         res.status(500).json({message:"Failed to fetch the browsereq",error:err.message})
     }
 }
-module.exports={createGroup,getBrowseRequests}
+
+const joinStudyGroupWithAI=async(req,res)=>{
+    try{
+        const userId=req.user._id
+        const groupId=req.params.groupId
+        const {aiAnswer}=req.body;
+
+        if(!aiAnswer||aiAnswer.trim().length===0){
+            return res.status(400).json({error:"Answer is required to join this group"})
+        }
+
+        const group=await StudyGroup.findById(groupId);
+        if(!group){
+            return res.status(404).json({error:"Study group not found"})
+        }
+
+        if(group.status!=="active"){
+            return  res.status(400).json({error:"This group is no longer active"})
+        }
+
+        let members=Array.isArray(group.members)?group.members:[];
+        if(members.includes(userId)){
+            return res.status(400).json({error:"You are already a member of this group."})
+        }
+
+        const score=await evaluateAiAnswer(group.aiquestion,aiAnswer)
+
+        if(score>=4){
+            members.push(userId)
+            group.members=members
+            await group.save()
+
+            return res.status(200).json({
+                message:"You have successfully joined the group",
+                score,
+                members:group.members
+            })
+        }else{
+            return res.status(403).json({
+                message:"Your answer should be better to join the group",
+                score
+            })
+        }
+
+    }
+    catch(err){
+        console.log('Joining group error',err);
+        res.status(500).json({
+            error:"Something went wrong while trying to join the group"
+        })
+
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+module.exports={createGroup,getBrowseRequests,joinStudyGroupWithAI}
