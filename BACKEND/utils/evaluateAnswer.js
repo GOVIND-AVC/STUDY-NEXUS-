@@ -9,7 +9,7 @@ const evaluateAnswerWithGemini=async(question,answer)=>{
 
         const prompt=`Evaluate the following answer for this question given , Return a score out of 10
         based on how appropriate the answer is for the asked question, it can based on how the conceptual understanding is given in the answer
-        or how relevant and thoughtful the answer is.
+        or how relevant and thoughtful the answer is like that.
         
         Question:${question}
         Answer:${answer}
