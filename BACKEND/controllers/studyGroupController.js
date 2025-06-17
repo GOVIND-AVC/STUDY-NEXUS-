@@ -83,6 +83,7 @@ const joinStudyGroupWithAI=async(req,res)=>{
         // if(members.includes(userId)){
         //     return res.status(400).json({error:"You are already a member of this group."})
         // }
+        
         group.members = Array.isArray(group.members) ? group.members : [];
         if (group.members.some(member => member.equals(userId))) {
             return res.status(400).json({ error: "You are already a member of this group." });
@@ -93,7 +94,7 @@ const joinStudyGroupWithAI=async(req,res)=>{
         }
 
         const score=await evaluateAiAnswer(group.aiquestion,aiAnswer)
-        
+
         if (score === null) {
             return res.status(500).json({ error: "Failed to evaluate answer due to API error." });
         }
