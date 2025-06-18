@@ -10,7 +10,7 @@ const communityPostSchema=new  mongoose.Schema({
         type:String,
         required:true
     },
-    tittle:{
+    title:{
         type:String,
         required:true
     },
