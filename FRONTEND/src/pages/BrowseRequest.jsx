@@ -72,9 +72,35 @@ const BrowseRequests =()=>{
     }
 
     
-    const handleJoingroup=(id)=>{
-        const userAnswer=aiAnswers[id];
-        console.log("Joining group ID:",id);
+    const handleJoingroup=async(groupid)=>{
+        const userAnswer=aiAnswers[groupid];
+        const token=localStorage.getItem('token');
+
+        if(!userAnswer || userAnswer.trim().length===0){
+            alert("To join the group you have to answer this question")
+            return
+        }
+
+        try{
+            const res=await axios.post(`http://localhost:4500/api/studygroup/join/${groupid}`,{
+                aiAnswer:userAnswer
+            },{
+                headers:{
+                    authorization:`Bearer ${token}`
+                }
+            })
+            alert(res.data.message +`\nScore: ${res.data.score}`)
+
+        }catch(err){
+            if(err.response?.data?.score!==undefined){
+                alert(`${err.response.data.message}\nScore: ${err.response.data.score}`);
+            }
+            else{
+                alert("Failed to join group: " + err.response?.data?.error || "Unknown error");
+            }
+        }
+
+        console.log("Joining group ID:",groupid);
         console.log("The answer Entered is ",userAnswer)
     }
 
