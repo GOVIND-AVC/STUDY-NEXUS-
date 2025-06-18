@@ -5,8 +5,7 @@ const connectdb=require('./config/db')
 const authRoutes=require('./routes/authRoutes')
 const cors=require('cors')
 const studyGroupRoutes=require('./routes/studyGroupRoutes')
-
-
+const communityRoutes=require('./routes/communityRoutes');
 
 require('dotenv').config()
 const app=express()
@@ -25,6 +24,8 @@ app.get('/',async (req,res)=>{
 app.use('/api/auth',authRoutes)
 
 app.use('/api/studygroup',studyGroupRoutes)
+
+app.use('/api/community',communityRoutes);
 
 
 app.listen(PORT,()=>{
