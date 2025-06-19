@@ -8,6 +8,6 @@ router.post('/create',protectRoute,createPost)
 router.get('/all',protectRoute,getAllPosts)
 router.post('/like/:postId',protectRoute,toggleLike)
 router.post('/comment/:postId',protectRoute,addComment)
-router.post('/comments/:postId',protectRoute,getComments)
+router.get('/comments/:postId',protectRoute,getComments)
 
 module.exports=router;

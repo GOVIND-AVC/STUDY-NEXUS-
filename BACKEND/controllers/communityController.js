@@ -99,7 +99,7 @@ const getComments=async(req,res)=>{
     try{
         const postId=req.params.postId;
 
-        const comments=await Comment.findById(postId).sort({createdAt:1}).lean()
+        const comments=await Comment.find({postId}).sort({createdAt:1}).lean()
         res.status(200).json({comments})
     }
     catch(err){
