@@ -34,7 +34,7 @@ const getAllPosts=async(req,res)=>{
         let sortOption={createdAt:-1};
         if(sort==='oldest')sortOption={createdAt:1};
 
-        const posts=await CommunityPost.find(filter).sort(sortOption).lean();
+        const posts=await CommunityPost.find(filter).sort(sortOption).populate('userId','name').lean();
         res.status(200).json({posts})
     }
     catch(err){
@@ -99,11 +99,13 @@ const getComments=async(req,res)=>{
     try{
         const postId=req.params.postId;
 
-        const comments=await Comment.find({postId}).sort({createdAt:1}).lean()
+        const comments=await Comment.find({postId}).populate('userId','name').sort({createdAt:1})
+        
+    console.log("✅ Comments with populated userId:", comments);
         res.status(200).json({comments})
     }
     catch(err){
-        console.log("Error while fetching the comments")
+        console.log("Error while fetching the comments",err)
         res.status(500).json({error:"Failed to load comments"})
     }
 }
