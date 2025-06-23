@@ -6,6 +6,8 @@ const authRoutes=require('./routes/authRoutes')
 const cors=require('cors')
 const studyGroupRoutes=require('./routes/studyGroupRoutes')
 const communityRoutes=require('./routes/communityRoutes');
+const userRoutes=require('./routes/userRoutes')
+
 
 require('dotenv').config()
 const app=express()
@@ -26,6 +28,8 @@ app.use('/api/auth',authRoutes)
 app.use('/api/studygroup',studyGroupRoutes)
 
 app.use('/api/community',communityRoutes);
+
+app.use('/api/user',userRoutes)
 
 
 app.listen(PORT,()=>{
