@@ -27,9 +27,9 @@ app.use('/api/auth',authRoutes)
 
 app.use('/api/studygroup',studyGroupRoutes)
 
-app.use('/api/community',communityRoutes,userRoutes);
+app.use('/api/community',communityRoutes);
 
-app.use('/api/user',)
+app.use('/api/user',userRoutes)
 
 
 app.listen(PORT,()=>{
