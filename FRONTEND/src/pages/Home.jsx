@@ -14,6 +14,10 @@ const HOME = () => {
     <h3>BrowseGroup</h3>
     </Link>
 
+    <Link to ="/communitypage">
+    <h3>COMMUNITY PAGE</h3>
+    </Link>
+
 
     </div>
 
