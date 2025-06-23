@@ -21,7 +21,7 @@ const communityPostSchema=new  mongoose.Schema({
     tags:[String],
     likes:[{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'user'
+        ref:'User'
     }],
     createdAt:{
         type:Date,

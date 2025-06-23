@@ -3,7 +3,7 @@ const mongoose=require('mongoose')
 const studyGroupSchema=new mongoose.Schema({
     userId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'user',
+        ref:'User',
         required:true
     },
     course:{
@@ -52,7 +52,7 @@ const studyGroupSchema=new mongoose.Schema({
     },
     createdby:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'user',
+        ref:'User',
     },
     createdAt:{
         type:Date,
@@ -66,7 +66,7 @@ const studyGroupSchema=new mongoose.Schema({
     },
     members: [{
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'user'
+    ref: 'User'
   }]
 
 })
