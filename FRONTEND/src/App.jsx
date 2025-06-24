@@ -8,6 +8,7 @@ import HOME from './pages/HOME.JSX'
 import CreateGroup from './pages/CreateGroup'
 import BrowseRequests from './pages/BrowseRequest'
 import CommunityPage from './pages/CommunityPage'
+import UserProfile from './pages/UserProfile'
 
 
 const App = () => {
@@ -22,6 +23,7 @@ const App = () => {
         <Route path='/creategroup'element={<CreateGroup/>}/>
         <Route path='/browsegroup'element={<BrowseRequests/>}/>
         <Route path='/communitypage'element={<CommunityPage/>}/>
+        <Route path='/user-profile'element={<UserProfile/>}/>
       </Routes>
     </Router>
     </>
