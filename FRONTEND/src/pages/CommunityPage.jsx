@@ -144,7 +144,7 @@ const CommunityPage=()=>{
 
     useEffect(()=>{
         fetchPost()
-    },[filters]);
+    },[filters,token]);
 
     return(
         <div className="p-4">
