@@ -18,6 +18,10 @@ const HOME = () => {
     <h3>COMMUNITY PAGE</h3>
     </Link>
 
+    <Link to="/user-profile">
+    <h3>USER-PROFILE</h3>
+    </Link>
+
 
     </div>
 
