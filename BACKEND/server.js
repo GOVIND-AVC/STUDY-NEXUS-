@@ -8,6 +8,10 @@ const studyGroupRoutes=require('./routes/studyGroupRoutes')
 const communityRoutes=require('./routes/communityRoutes');
 const userRoutes=require('./routes/userRoutes')
 
+const http=require('http');
+const {Server}= require('socket.io')
+const setupChatSocket = require('./socket/chatSocket')
+
 
 require('dotenv').config()
 const app=express()
@@ -32,6 +36,27 @@ app.use('/api/community',communityRoutes);
 app.use('/api/user',userRoutes)
 
 
-app.listen(PORT,()=>{
+const server=http.createServer(app);
+
+const io=new Server(server,{
+    cors:{
+        origin:'http://localhost:5173',
+        methods:['Get','Post']
+    }
+})
+
+setupChatSocket(io);
+
+
+server.listen(PORT,()=>{
     console.log(`SERVER RUNNING ON PORT ${PORT}`)
 })
+
+
+
+
+
+
+// app.listen(PORT,()=>{
+//     console.log(`SERVER RUNNING ON PORT ${PORT}`)
+// })
