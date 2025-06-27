@@ -1,12 +1,15 @@
 /* eslint-disable no-unused-vars */
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import GroupChat from '../components/GroupChat';
 
 const UserProfile = () => {
     
     const [profileData,setProfileData]=useState(null);
     const[loading ,setLoading]=useState(true);
     const[error,setError]=useState(null);
+    const[selectedGroupId,setSelectedGroupId]=useState(null);
+    const[showChat,setShowChat]=useState(false)
 
 
     const token=localStorage.getItem('token')
@@ -91,6 +94,14 @@ const UserProfile = () => {
                         <p><strong>Course : </strong> {req.course} | <strong>Topic:</strong> {req.topic}</p>
                         <p><strong>Created by : </strong> {req.createdby?.name || "Unknown"}</p>
                         <p><strong>Study Mode : </strong> {req.studymode}</p>
+
+                    <button  className="mt-2 px-3 py-1 bg-blue-500 text-white rounded"
+                        onClick={()=>{
+                            setSelectedGroupId(req._id)
+                            setShowChat(true)
+                        }}>
+                            Open Chat
+                    </button>
                     </div>
                 ))
             )}
@@ -113,6 +124,18 @@ const UserProfile = () => {
             )}
 
         </div>
+
+        {showChat && selectedGroupId &&(
+            <div className="fixed bottom-4 right-4 bg-white shadow-lg border rounded p-4 w-[400px] max-h-[500px] overflow-y-auto z-50">
+                <button className="text-red-500 font-bold float-right"
+                onClick={() => setShowChat(false)}>
+                    Close Chat
+                </button>
+                <GroupChat groupId={selectedGroupId}/>
+            </div>
+        )}    
+
+
 
     </div>
   )
