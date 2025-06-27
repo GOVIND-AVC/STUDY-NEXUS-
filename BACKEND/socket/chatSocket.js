@@ -2,7 +2,7 @@ const GroupChatSchema = require("../models/GroupChatMessage");
 const StudyGroup=require('../models/StudyGroup')
 const jwt=require('jsonwebtoken')
 const User=require('../models/user');
-const User = require("../models/user");
+// const User = require("../models/user");
 
 const setupChatSocket=(io)=>{
     io.on('connection',(socket)=>{
@@ -36,6 +36,7 @@ const setupChatSocket=(io)=>{
                 await newMsg.save()
 
                 io.to(groupId).emit("recieve-message",{
+                    _id:newMsg._id,
                     message:newMsg.message,
                     senderId:newMsg.senderId,
                     senderName:newMsg.senderName,
