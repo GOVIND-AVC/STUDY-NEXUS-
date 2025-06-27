@@ -7,6 +7,8 @@ const cors=require('cors')
 const studyGroupRoutes=require('./routes/studyGroupRoutes')
 const communityRoutes=require('./routes/communityRoutes');
 const userRoutes=require('./routes/userRoutes')
+const groupChat=require('./routes/groupChatRoutes')
+
 
 const http=require('http');
 const {Server}= require('socket.io')
@@ -35,13 +37,16 @@ app.use('/api/community',communityRoutes);
 
 app.use('/api/user',userRoutes)
 
+app.use('/api/chat',groupChat)
+
 
 const server=http.createServer(app);
 
 const io=new Server(server,{
     cors:{
         origin:'http://localhost:5173',
-        methods:['Get','Post']
+        methods:['Get','Post'],
+        credentials:true
     }
 })
 
